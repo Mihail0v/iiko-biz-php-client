@@ -1,0 +1,16 @@
+{
+    "name": "mihail0v/iiko-biz-php-client",
+    "authors": [
+        {
+            "name": "mihail0v",
+            "email": "mihail0v@mail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Iiko\\": "src/"}
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/psr7": "^1.5"
+    }
+}
