@@ -18,4 +18,24 @@ class Address extends AbstractModel
     {
         $this->setData('home', $home);
     }
+
+    public function setApartment($val)
+    {
+        $this->setData('apartment', $val);
+    }
+
+    public function setFloor($val)
+    {
+        $this->setData('floor', $val);
+    }
+
+    public function setEntrance($val)
+    {
+        $this->setData('entrance', $val);
+    }
+
+    public function setComment($val)
+    {
+        $this->setData('comment', $val);
+    }
 }

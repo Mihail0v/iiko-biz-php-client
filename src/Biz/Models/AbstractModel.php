@@ -2,7 +2,9 @@
 
 namespace Iiko\Biz\Models;
 
-class AbstractModel implements \JsonSerializable
+use JsonSerializable;
+
+class AbstractModel implements JsonSerializable
 {
     protected $data;
 
@@ -11,20 +13,17 @@ class AbstractModel implements \JsonSerializable
         $this->data = $data;
     }
 
-    public function setData($key, $value)
+    public function setData(string $key, $value)
     {
         $this->data[$key] = $value;
     }
 
-    public function getData($key = null, $default = null)
+    public function getData(string $key = null, $default = null)
     {
         if ($key === null) {
             return $this->data;
         }
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
-        }
-        return $default;
+        return $this->data[$key] ?? $default;
     }
 
     public function jsonSerialize()

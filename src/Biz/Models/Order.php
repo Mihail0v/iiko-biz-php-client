@@ -11,6 +11,11 @@ class Order extends AbstractModel
         $this->setData('id', $id);
     }
 
+    public function setComment($comment)
+    {
+        $this->setData('comment', (string)$comment);
+    }
+
     public function setPhone($phone)
     {
         $this->setData('phone', (string)$phone);

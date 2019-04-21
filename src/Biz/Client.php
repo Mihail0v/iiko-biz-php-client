@@ -6,6 +6,10 @@ namespace Iiko\Biz;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
+use Iiko\Biz\Api\DeliverySettings;
+use Iiko\Biz\Api\Exception\WrongCredentialsException;
+use Iiko\Biz\Api\Orders;
+use Iiko\Biz\Api\Organizations;
 
 class Client
 {
@@ -27,7 +31,7 @@ class Client
     {
         $this->config = array_merge(
             [
-                'request_timeout' => 1000
+                'request_timeout' => '0:0:30'
             ],
             $config
         );
@@ -35,6 +39,10 @@ class Client
         $this->token = $this->getSecretToken();
     }
 
+    /**
+     * @return mixed
+     * @throws WrongCredentialsException
+     */
     protected function getSecretToken()
     {
         try {
@@ -47,31 +55,33 @@ class Client
             );
         } catch (ClientException $e) {
             if ($e->getCode() === 400) {
-                echo 'not authorized';
-                exit;
+                throw new WrongCredentialsException();
             }
+            throw $e;
         }
-        return $response->getBody();
+        return json_decode($response->getBody()->getContents(), true);
     }
 
-    protected function createDefaultHttpClient()
+    protected function createDefaultHttpClient(): GuzzleClient
     {
         return new GuzzleClient([
             'base_uri' => self::API_BASE_URI,
         ]);
     }
 
-    /**
-     * @param $name string
-     */
-    public function api($name)
+    public function orders(): Orders
     {
-        switch ($name) {
-            case 'auth':
-                $api = '';
-                break;
-        }
-        return $api;
+        return new Orders($this);
+    }
+
+    public function organizations(): Organizations
+    {
+        return new Organizations($this);
+    }
+
+    public function deliveryTerminals(): DeliverySettings
+    {
+        return new DeliverySettings($this);
     }
 
     public function getHttpClient()
@@ -79,11 +89,11 @@ class Client
         return $this->client;
     }
 
-    public function getRequestParams()
+    public function getRequestParams(): array
     {
-        return http_build_query([
+        return [
             'access_token' => $this->token,
             'request_timeout' => $this->config['request_timeout']
-        ]);
+        ];
     }
 }
